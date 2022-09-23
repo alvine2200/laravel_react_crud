@@ -1,11 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import Router from '../router/Router'
 
 const App = () =>{
     return (
-        <div>
-            <h1>My first react app with laravel</h1>
-        </div>
+        <Router/>
     )
 }
 export default App
