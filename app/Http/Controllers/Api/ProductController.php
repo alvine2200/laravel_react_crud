@@ -30,33 +30,42 @@ class ProductController extends Controller
             ]);
         }
         //convert base64 to image string
-        if($request->photo != ""){
-            $strpos=strpos($request->photo,0);
-            $sub=substr($request->photo,0,$strpos);
-            $ex=explode('/',$sub)[1];
-            $name=time().".".$ex;
-            $img=Image::make($request->photo)->resize(117,100);
-            $upload_path=public_path()."./upload/";
-            $img->save($upload_path.$name);
-        }
-        else{
+        // if($request->photo != ""){
+        //     $strpos=strpos($request->photo,0);
+        //     $sub=substr($request->photo,0,$strpos);
+        //     $ex=explode('/',$sub)[1];
+        //     $name=time().".".$ex;
+        //     $img=Image::make($request->photo)->resize(117,100);
+        //     $upload_path=public_path()."./upload/";
+        //     $img->save($upload_path.$name);
+        // }
+        // else{
+        //     return response()->json([
+        //         'error'=>'File Doesnt Exists'
+        //     ]);
+        // }
+
+        if($request->file('photo'))
+        {
+            $file=$request->file('photo');
+            $photo=$file->store('Product');
+
+            $data=Product::Create([
+                'name'=>$request->name,
+                'type'=>$request->type,
+                'price'=>$request->price,
+                'quantity'=>$request->quantity,
+                'photo'=>$photo,
+                'description'=>$request->description
+            ]); 
+
             return response()->json([
-                'error'=>'File Doesnt Exists'
+               'success'=>'Product successfully created',
+               'data'=>$data,
             ]);
-        }
+        }      
 
-        $data=Product::Create([
-            'name'=>$request->name,
-            'type'=>$request->type,
-            'price'=>$request->price,
-            'quantity'=>$request->quantity,
-            'photo'=>$name,
-            'description'=>$request->description
-        ]);
-
-        return response()->json([
-            'success'=>'Product successfully created',200
-        ]);
+        
         
     }
 }
