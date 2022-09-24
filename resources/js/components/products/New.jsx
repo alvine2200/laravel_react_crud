@@ -29,11 +29,11 @@ const New = () => {
           })
         }
 
-        reader.onloadend=(file)=>{
-            setPhoto(reader.result)
-        }
+         reader.onloadend=(file)=>{
+             setPhoto(reader.result)
+         }
 
-        reader.readAsDataURL(file)
+         reader.readAsDataURL(file)
     }
 
     const createProduct= async (e) => {
@@ -41,22 +41,25 @@ const New = () => {
 
         const formData=new FormData()
 
-        formData.append['name',name]
-        formData.append['description',description]
-        formData.append['photo',photo]
-        formData.append['type',type]
-        formData.append['quantity',quantity]
-        formData.append['price',price]
+        formData.append('name',name)
+        formData.append('description',description)
+        formData.append('photo',photo)
+        formData.append('type',type)
+        formData.append('quantity',quantity)
+        formData.append('price',price)
 
-        await axios.post('/api/add_product/',formData)
-        .then(({data})=>{
+        await axios.post('/api/add_product',formData)
+        .then((data)=>{
+
             toast.fire({
                 icon:'success',
                 title:'Product added successfully'
             })
+            navigate("/")
+            console.log(data)
         })
-        .catch(({response})=>{
-
+        .catch((response)=>{
+            console.log(response)
         })
     }
     return (
@@ -115,6 +118,15 @@ const New = () => {
                     </div>
 
 
+                </div>
+
+                <div className="titlebar">
+                    <div className="titlebar_item">
+                        
+                    </div>
+                    <div className="titlebar_item">
+                        <button className="btn" onClick={(event)=>createProduct(event)} >Save</button>
+                    </div>
                 </div>
 
             </div>
