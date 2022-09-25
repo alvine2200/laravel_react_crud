@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom";
 
-
 const New = () => {
 
     const navigate=useNavigate()
@@ -55,13 +54,16 @@ const New = () => {
                 icon:'success',
                 title:'Product added successfully'
             })
+
             navigate("/")
-            console.log(data)
+            
         })
         .catch((response)=>{
             console.log(response)
         })
+        
     }
+    
     return (
         <div className="container">
             <div className="products_create">
@@ -117,12 +119,10 @@ const New = () => {
                         </div>
                     </div>
 
-
                 </div>
 
                 <div className="titlebar">
-                    <div className="titlebar_item">
-                        
+                    <div className="titlebar_item">                        
                     </div>
                     <div className="titlebar_item">
                         <button className="btn" onClick={(event)=>createProduct(event)} >Save</button>

@@ -6,12 +6,23 @@ use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
+
+    public function getproducts()
+    {
+        $products=Product::all();
+        $resource= new ProductResource($products);
+        return response()->json([
+            'success'=>'Products fetched successfully',
+            'products'=>$resource,
+        ], 200);
+    }
     public function addProduct(Request $request)
     {
         $validator=Validator::make($request->all(),[
@@ -20,7 +31,7 @@ class ProductController extends Controller
             'price'=>'required|string',
             'quantity'=>"required|string",
             'description'=>'required|string',
-            //'photo'=>'mimes:jpeg,jpg,png,gif|required|max:10000'
+            'photo'=>'mimes:jpeg,jpg,png,gif|required|max:10000'
         ]);
 
         if($validator->fails())
@@ -29,21 +40,6 @@ class ProductController extends Controller
                 'error'=>$validator->errors(),400
             ]);
         }
-        //convert base64 to image string
-        // if($request->photo != ""){
-        //     $strpos=strpos($request->photo,0);
-        //     $sub=substr($request->photo,0,$strpos);
-        //     $ex=explode('/',$sub)[1];
-        //     $name=time().".".$ex;
-        //     $img=Image::make($request->photo)->resize(117,100);
-        //     $upload_path=public_path()."./upload/";
-        //     $img->save($upload_path.$name);
-        // }
-        // else{
-        //     return response()->json([
-        //         'error'=>'File Doesnt Exists'
-        //     ]);
-        // }
 
         if($request->file('photo'))
         {

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class ProductResource extends JsonResource
 {
@@ -14,6 +15,8 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $resolve=parent::toArray($request);
+        //$resolve['photo']=$resolve['photo'] ? url(Storage::url($this->photo)) : '';
+        return $resolve;
     }
 }
