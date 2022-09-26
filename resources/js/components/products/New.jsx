@@ -1,69 +1,71 @@
 import axios from "axios";
-import React, { useState } from "react"
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const New = () => {
+    const navigate = useNavigate();
 
-    const navigate=useNavigate()
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [photo, setPhoto] = useState(null);
+    const [type, setType] = useState("");
+    const [quantity, setQuantity] = useState("");
+    const [price, setPrice] = useState("");
 
-    const [name,setName]=useState('')
-    const [description,setDescription]=useState('')
-    const [photo,setPhoto]=useState(null)
-    const [type,setType]=useState('')
-    const [quantity,setQuantity]=useState('')
-    const [price,setPrice]=useState('')
+    const changeHandler = (e) => {
+        // let file = e.target.files[0];
+        // let reader = new FileReader();
+        // let limit = 1024 * 1024 * 2;
+        // if (file["size"] > limit) {
+        //     Swal.fire({
+        //         type: "error",
+        //         title: "ooops....",
+        //         text: "Something went wrong",
+        //         footer: "Why do i have this issue ?",
+        //     });
+        // }
+        // reader.onloadend = (file) => {
+        //     setPhoto(reader.result);
+        // };
+        //reader.readAsDataURL(file);
+    };
 
-    const changeHandler=(e)=>{
+    const createProduct = async (e) => {
+        e.preventDefault();
 
-        let file=e.target.files[0] 
-        let reader=new FileReader()
-        let limit=1024*1024*2
+        let file = document.querySelector("#photo");
+        setPhoto(file.files[0]);
 
-        if(file['size'] > limit){
-          Swal.fire({
-            type:'error',
-            title:'ooops....',
-            text:'Something went wrong',
-            footer: 'Why do i have this issue ?'
-          })
-        }
+        const formData = new FormData();
 
-         reader.onloadend=(file)=>{
-             setPhoto(reader.result)
-         }
+        formData.append("name", name);
+        formData.append("description", description);
+        formData.append("photo", photo);
+        console.log(photo);
+        formData.append("type", type);
+        formData.append("quantity", quantity);
+        formData.append("price", price);
 
-         reader.readAsDataURL(file)
-    }
+        const config = {
+            headers: { "content-type": "multipart/form-data" },
+        };
 
-    const createProduct= async (e) => {
-        e.preventDefault()
+        await axios
+            .post("/api/add_product", formData, config)
+            .then((data) => {
+                toast.fire({
+                    icon: "success",
+                    title: "Product added successfully",
+                });
 
-        const formData=new FormData()
-
-        formData.append('name',name)
-        formData.append('description',description)
-        formData.append('photo',photo)
-        formData.append('type',type)
-        formData.append('quantity',quantity)
-        formData.append('price',price)
-
-        await axios.post('/api/add_product',formData)
-        .then((data)=>{
-
-            toast.fire({
-                icon:'success',
-                title:'Product added successfully'
+                navigate("/");
+                console.log(data);
             })
+            .catch((response) => {
+                console.log(response);
+            });
+    };
 
-            navigate("/")
-            
-        })
-        .catch((response)=>{
-            console.log(response)
-        })
-        
-    }
-    
     return (
         <div className="container">
             <div className="products_create">
@@ -72,23 +74,45 @@ const New = () => {
                         <h1>Add Product</h1>
                     </div>
                     <div className="titlebar_item">
-                        <button className="btn" onClick={(event)=>createProduct(event)} >Save</button>
+                        <button
+                            className="btn"
+                            onClick={(event) => createProduct(event)}
+                        >
+                            Save
+                        </button>
                     </div>
                 </div>
                 <div className="card_wrapper">
                     <div className="wrapper_left">
                         <div className="card">
                             <p>Name </p>
-                            <input type="text" value={name} onChange={(event)=>{setName(event.target.value)}} />
+                            <input
+                                type="text"
+                                value={name}
+                                onChange={(event) => {
+                                    setName(event.target.value);
+                                }}
+                            />
 
                             <p>Description (Optional) </p>
-                            <textarea cols="10" rows="5" value={description} onChange={(event)=>{setDescription(event.target.value)}} ></textarea>
+                            <textarea
+                                cols="10"
+                                rows="5"
+                                value={description}
+                                onChange={(event) => {
+                                    setDescription(event.target.value);
+                                }}
+                            ></textarea>
 
                             <div className="media">
                                 <div className="images_list">
                                     <div className="image_item">
                                         <div className="image_item-img">
-                                            <img src={photo} width="-117px" height="100px" />
+                                            <img
+                                                src={photo}
+                                                width="-117px"
+                                                height="100px"
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -96,8 +120,18 @@ const New = () => {
 
                             <div className="image_item">
                                 <div className="image_item-form">
-                                    <label className="image_item-form--label">Add Image </label>
-                                    <input type="file" className="image_item-form--input" onChange={changeHandler}/>
+                                    <label className="image_item-form--label">
+                                        Add Image
+                                    </label>
+                                    <input
+                                        id="photo"
+                                        type="file"
+                                        className="image_item-form--input"
+                                        onChange={(e) =>
+                                            setPhoto(e.target.files[0])
+                                        }
+                                        //onChange={changeHandler}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -105,30 +139,50 @@ const New = () => {
                     <div className="wrapper_right">
                         <div className="card">
                             <p>Product Type</p>
-                            <input type="text" value={type} onChange={(event)=>{setType(event.target.value)}} />
+                            <input
+                                type="text"
+                                value={type}
+                                onChange={(event) => {
+                                    setType(event.target.value);
+                                }}
+                            />
 
-                            <hr className="hr"/>
+                            <hr className="hr" />
 
                             <p>Inventory</p>
-                            <input type="text" value={quantity} onChange={(event)=>{setQuantity(event.target.value)}}/>
+                            <input
+                                type="text"
+                                value={quantity}
+                                onChange={(event) => {
+                                    setQuantity(event.target.value);
+                                }}
+                            />
 
                             <hr className="hr" />
 
                             <p>Price</p>
-                            <input type="text" value={price} onChange={(event)=>{setPrice(event.target.value)}}/>
+                            <input
+                                type="text"
+                                value={price}
+                                onChange={(event) => {
+                                    setPrice(event.target.value);
+                                }}
+                            />
                         </div>
                     </div>
-
                 </div>
 
                 <div className="titlebar">
-                    <div className="titlebar_item">                        
-                    </div>
+                    <div className="titlebar_item"></div>
                     <div className="titlebar_item">
-                        <button className="btn" onClick={(event)=>createProduct(event)} >Save</button>
+                        <button
+                            className="btn"
+                            onClick={(event) => createProduct(event)}
+                        >
+                            Save
+                        </button>
                     </div>
                 </div>
-
             </div>
         </div>
     );

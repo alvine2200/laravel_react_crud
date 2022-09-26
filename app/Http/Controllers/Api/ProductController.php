@@ -16,52 +16,47 @@ class ProductController extends Controller
 
     public function getproducts()
     {
-        $products=Product::all();
-        $resource= new ProductResource($products);
+        $products = Product::all();
+        $resource = new ProductResource($products);
         return response()->json([
-            'success'=>'Products fetched successfully',
-            'products'=>$resource,
+            'success' => 'Products fetched successfully',
+            'products' => $resource,
         ], 200);
     }
     public function addProduct(Request $request)
     {
-        $validator=Validator::make($request->all(),[
-            'name'=>'required|string',
-            'type'=>"required|string",
-            'price'=>'required|string',
-            'quantity'=>"required|string",
-            'description'=>'required|string',
-            'photo'=>'mimes:jpeg,jpg,png,gif|required|max:10000'
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'type' => "required|string",
+            'price' => 'required|string',
+            'quantity' => "required|string",
+            'description' => 'required|string',
+            'photo' => 'image|mimes:jpeg,jpg,png,gif|required|max:10000'
         ]);
 
-        if($validator->fails())
-        {
+        if ($validator->fails()) {
             return response()->json([
-                'error'=>$validator->errors(),400
+                'error' => $validator->errors(), 400
             ]);
         }
 
-        if($request->file('photo'))
-        {
-            $file=$request->file('photo');
-            $photo=$file->store('Product');
+        if ($request->file('photo')) {
+            $file = $request->file('photo');
+            $photo = $file->store('Product');
 
-            $data=Product::Create([
-                'name'=>$request->name,
-                'type'=>$request->type,
-                'price'=>$request->price,
-                'quantity'=>$request->quantity,
-                'photo'=>$photo,
-                'description'=>$request->description
-            ]); 
+            $data = Product::Create([
+                'name' => $request->name,
+                'type' => $request->type,
+                'price' => $request->price,
+                'quantity' => $request->quantity,
+                'photo' => $photo,
+                'description' => $request->description
+            ]);
 
             return response()->json([
-               'success'=>'Product successfully created',
-               'data'=>$data,
+                'success' => 'Product successfully created',
+                'data' => $data,
             ]);
-        }      
-
-        
-        
+        }
     }
 }
