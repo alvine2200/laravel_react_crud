@@ -17,7 +17,7 @@ class ProductController extends Controller
     public function getproducts()
     {
         $products = Product::all();
-        $resource = new ProductResource($products);
+        $resource = ProductResource::collection($products);
         return response()->json([
             'success' => 'Products fetched successfully',
             'products' => $resource,
@@ -40,9 +40,9 @@ class ProductController extends Controller
             ]);
         }
 
-        if ($request->file('photo')) {
-            $file = $request->file('photo');
-            $photo = $file->store('Product');
+        if ($file = $request->file('photo')) {
+            $filename = uniqid() . $file->getClientOriginalName();
+            $photo = $request->file('photo')->storePubliclyAs('public', $filename);
 
             $data = Product::Create([
                 'name' => $request->name,

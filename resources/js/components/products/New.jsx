@@ -104,7 +104,7 @@ const New = () => {
                                 }}
                             ></textarea>
 
-                            <div className="media">
+                            {/* <div className="media">
                                 <div className="images_list">
                                     <div className="image_item">
                                         <div className="image_item-img">
@@ -116,7 +116,7 @@ const New = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                             <div className="image_item">
                                 <div className="image_item-form">

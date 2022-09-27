@@ -5,7 +5,6 @@ import { useState } from "react";
 import axios from "axios";
 
 const Index = () => {
-    
     const [products, setProduts] = useState([]);
 
     const navigate = useNavigate();
@@ -16,13 +15,28 @@ const Index = () => {
 
     useEffect(() => {
         getProducts();
-    });
+    }, []);
 
     const getProducts = async () => {
-        await axios.get("/api/get_all_products").then((data) => {
+        // try {
+        //     await axios.get("/api/get_all_products").then((data) => {
+        //         setProduts(data.products);
+        //         console.log(data.products);
+        //     })
+        // } catch (error) {
+        //     console.log(error)
+        // }
+
+        try {
+            const res = await fetch("/api/get_all_products");
+            const data = await res.json();
             setProduts(data.products);
-        });
+            //console.log(data.products.photo);
+        } catch (error) {
+            console(error);
+        }
     };
+    // }
 
     return (
         <div className="container">
@@ -50,10 +64,7 @@ const Index = () => {
                     {products?.length > 0 &&
                         products.map((item, key) => (
                             <div className="list_items" key={key}>
-                                <img
-                                    src={`/Product/${item.photo}`}
-                                    height="40px"
-                                />
+                                <img src={`${item.photo}`} height="40px" />
                                 <a>{item.name}</a>
                                 <p>{item.type}</p>
                                 <p>{item.quantity}</p>

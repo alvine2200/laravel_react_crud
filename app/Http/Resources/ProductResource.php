@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Resources\Json\JsonResource;
+
 
 class ProductResource extends JsonResource
 {
@@ -15,8 +17,26 @@ class ProductResource extends JsonResource
      */
     public function toArray($request)
     {
-        $resolve=parent::toArray($request);
-        //$resolve['photo']=$resolve['photo'] ? url(Storage::url($this->photo)) : '';
-        return $resolve;
+        return [
+            "id" => $this->id,
+            'name' => $this->name,
+            'price' => $this->price,
+            "type" => $this->type,
+            "quantity" => $this->quantity,
+            "photo" => !empty($this->photo) ? url(Storage::url($this->photo)) : '',
+            //'photo' => URL::asset('storage/app/' . $this->photo)
+        ];
+
+        // $result = [
+        //     "id" => $this->id,
+        //     'name' => $this->name,
+        //     'price' => $this->price,
+        //     "type" => $this->type,
+        //     "quantity" => $this->quantity,
+        //     "photo" => !empty($this->photo) ? url(Storage::url($this->photo)) : '',
+        //     //'thumbnail_image' => !empty($this->thumbnail_image) ? url(Storage::url($this->thumbnail_image)) : '',
+
+        // ];
+        //return $resolve;
     }
 }
